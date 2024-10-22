@@ -3,8 +3,8 @@ import { typeGuard } from 'yammies/type-guard';
 
 import { SchemaSegment } from '../../oa-internal-schema/segments/schema.js';
 import { stringifyValue } from '../../utils/formatting.js';
-import { PresetFn } from '../preset-fn.js';
 import { LoggerImpl } from '../../utils/index.js';
+import { PresetFn } from '../preset-fn.js';
 
 const formatDescription = (description: string, inline?: boolean) => {
   if (!description) return '';
