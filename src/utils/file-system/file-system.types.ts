@@ -1,5 +1,5 @@
-import { CodegenSwaggerSchemaConfig } from '../../codegen-swagger-schema/codegen-swagger-schema.types.js';
+import { Engine } from '../../engine/engine.js';
 
 export interface FileSystemConfig {
-  mainConfig: CodegenSwaggerSchemaConfig;
+  engine: Engine;
 }

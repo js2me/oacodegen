@@ -1,5 +1,5 @@
-import { OASchemaCodegenGenerateParams } from './oa-schema-codegen.types.js';
+import { CodegenTemplate } from './codegen-template/codegen-template.js';
 
 export interface OASchemaCodegen {
-  generate(params: OASchemaCodegenGenerateParams): Promise<void>;
+  template(strings: TemplateStringsArray, ...args: any[]): CodegenTemplate;
 }

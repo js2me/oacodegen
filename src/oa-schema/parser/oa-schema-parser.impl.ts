@@ -10,6 +10,7 @@ import { Logger } from '../../utils/logger/logger.js';
 
 import { OASchemaParser } from './oa-schema-parser.js';
 import {
+  OA3ModifiedDocument,
   OASchemaParserConfig,
   OASchemaParserParseParams,
 } from './oa-schema-parser.types.js';
@@ -19,11 +20,25 @@ export class OASchemaParserImpl implements OASchemaParser {
 
   constructor(protected config: OASchemaParserConfig) {
     this.logger = new LoggerImpl({
-      mainConfig: config.mainConfig,
+      engine: config.engine,
       name: 'oas-schema-parser',
     });
 
     this.logger.debug('initialized');
+  }
+
+  applySchemaModifications({
+    usageSchema,
+    originalSchema,
+  }: {
+    originalSchema: AnyObject;
+    usageSchema: AnyObject;
+  }): OA3ModifiedDocument {
+    const result = structuredClone(usageSchema) as OA3ModifiedDocument;
+
+    result['__original'] = originalSchema;
+
+    return result;
   }
 
   applySchemaFixes({
@@ -153,6 +168,15 @@ export class OASchemaParserImpl implements OASchemaParser {
       });
     }
 
-    return new OAInternalSchemaImpl(resultSchema, this.config.mainConfig);
+    resultSchema = this.applySchemaModifications({
+      originalSchema,
+      usageSchema: resultSchema,
+    });
+
+    return new OAInternalSchemaImpl({
+      schema: resultSchema,
+      engine: this.config.engine,
+      schemaAddress: '#',
+    });
   }
 }

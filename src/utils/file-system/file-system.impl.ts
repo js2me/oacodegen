@@ -11,7 +11,7 @@ export class FileSystemImpl implements FileSystem {
 
   constructor(protected config: FileSystemConfig) {
     this.logger = new LoggerImpl({
-      mainConfig: config.mainConfig,
+      engine: config.engine,
       name: 'file-system',
     });
     this.logger.debug('initialized');

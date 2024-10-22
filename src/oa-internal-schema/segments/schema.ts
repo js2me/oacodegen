@@ -3,23 +3,23 @@ import { OpenAPIV3 } from 'openapi-types';
 
 import { Segment } from './segment.js';
 
-interface SchemaSegmentInput {
+interface SchemaSegmentData {
   name: string;
   schema: OpenAPIV3.SchemaObject;
 }
 
-export class SchemaSegment extends Segment<SchemaSegmentInput> {
+export class SchemaSegment extends Segment<SchemaSegmentData> {
   get readableName() {
-    const formatParams = this.config.mainConfig.formatParams;
+    const formatParams = this.config.engine.config.formatParams;
 
     if (formatParams?.schemaNames?.customFn) {
       return formatParams.schemaNames.customFn(
-        this.config.input.name,
-        this.config.input.schema,
+        this.config.data.name,
+        this.config.data.schema,
       );
     }
 
-    const formattedName = upperFirst(this.config.input.name).replaceAll(
+    const formattedName = upperFirst(this.config.data.name).replaceAll(
       /\s/g,
       '',
     );
@@ -30,10 +30,10 @@ export class SchemaSegment extends Segment<SchemaSegmentInput> {
   }
 
   get description() {
-    return this.config.input.schema.description ?? '';
+    return this.config.data.schema.description ?? '';
   }
 
   get title() {
-    return this.config.input.schema.title ?? '';
+    return this.config.data.schema.title ?? '';
   }
 }

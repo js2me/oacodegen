@@ -1,9 +1,9 @@
 import { AnyObject, Maybe } from 'yammies/utils/types';
 
-import { CodegenSwaggerSchemaConfig } from '../../codegen-swagger-schema/codegen-swagger-schema.types.js';
+import { Engine } from '../../engine/engine.js';
 
 export interface OASchemaLoaderConfig {
-  mainConfig: CodegenSwaggerSchemaConfig;
+  engine: Engine;
 }
 
 export interface OASchemaLoaderLoadPayload {

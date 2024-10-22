@@ -1,7 +1,14 @@
-import { CodegenSwaggerSchemaConfig } from '../../codegen-swagger-schema/codegen-swagger-schema.types.js';
+import { Engine } from '../../engine/engine.js';
+
+import { OASchemaCodegen } from './oa-schema-codegen.js';
 
 export interface OASchemaCodegenConfig {
-  mainConfig: CodegenSwaggerSchemaConfig;
+  engine: Engine;
 }
 
-export interface OASchemaCodegenGenerateParams {}
+export interface OASchemaCodegenGenerateParams {
+  generationFn?: (
+    codegen: OASchemaCodegen,
+    engine: Engine,
+  ) => Promise<void> | void;
+}

@@ -1,6 +1,6 @@
-import { CodegenSwaggerSchemaConfig } from '../../codegen-swagger-schema/index.js';
+import { Engine } from '../../engine/engine.js';
 
 export interface LoggerConfig {
   name?: string;
-  mainConfig: CodegenSwaggerSchemaConfig;
+  engine: Engine;
 }

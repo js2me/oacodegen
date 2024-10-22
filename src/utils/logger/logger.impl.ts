@@ -7,7 +7,7 @@ export class LoggerImpl implements Logger {
   private logLevels: (keyof Logger)[];
 
   constructor(protected config: LoggerConfig) {
-    const logLevel = config.mainConfig.logLevel ?? 'info';
+    const logLevel = config.engine.config.logLevel ?? 'info';
     this.logLevels = logLevels.slice(logLevels.indexOf(logLevel));
   }
 

@@ -9,22 +9,26 @@ import { OASchemaWalkerConfig } from './oa-schema-walker.types.js';
 export class OASchemaWalkerImpl implements OASchemaWalker {
   protected logger: Logger;
 
-  protected researchedSchemas: Map<string, OASchemaWalker>;
-  protected researchedSegments: Map<string, any>;
-
   schema: OpenAPIV3.Document;
+
+  schemaAddress: string;
 
   constructor(protected config: OASchemaWalkerConfig) {
     this.logger = new LoggerImpl({
-      mainConfig: config.mainConfig,
+      engine: config.engine,
       name: 'oa-schema-walker',
     });
 
+    this.schemaAddress = config.schemaAddress ?? '#';
     this.schema = config.schema;
-    this.researchedSchemas = new Map();
-    this.researchedSegments = new Map();
 
-    this.researchedSchemas.set('#', this);
+    if (this.config.engine.researchedSchemas.has(this.schemaAddress)) {
+      throw this.logger.error(
+        'Something went wrong. This schema already researched.',
+      );
+    }
+
+    this.config.engine.researchedSchemas.set(this.schemaAddress, this);
 
     this.logger.debug('initialized');
   }
@@ -32,9 +36,9 @@ export class OASchemaWalkerImpl implements OASchemaWalker {
   getByRef(ref: string): Promise<any> {
     this.logger.debug('get by ref', ref);
 
-    if (this.researchedSegments.has(ref)) {
+    if (this.config.engine.researchedSegments.has(ref)) {
       this.logger.debug('get by ref', ref, '<cached>');
-      return this.researchedSegments.get(ref)!;
+      return this.config.engine.researchedSegments.get(ref)!;
     }
 
     // inside schema ref
@@ -45,7 +49,7 @@ export class OASchemaWalkerImpl implements OASchemaWalker {
 
       this.logger.debug('get by ref path:', path, 'result:', segment);
 
-      this.researchedSegments.set(ref, segment);
+      this.config.engine.researchedSegments.set(ref, segment);
 
       return segment;
     }

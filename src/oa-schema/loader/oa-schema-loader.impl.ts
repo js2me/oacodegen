@@ -19,11 +19,11 @@ export class OASchemaLoaderImpl implements OASchemaLoader {
 
   constructor(protected config: OASchemaLoaderConfig) {
     this.logger = new LoggerImpl({
-      mainConfig: config.mainConfig,
+      engine: config.engine,
       name: 'oas-schema-loader',
     });
     this.fs = new FileSystemImpl({
-      mainConfig: config.mainConfig,
+      engine: config.engine,
     });
 
     this.logger.debug('initialized');
