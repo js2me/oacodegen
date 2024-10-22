@@ -1,8 +1,9 @@
-import { OAInternalSchema } from '../oa-internal-schema/oa-internal-schema.js';
+import { Options as PrettierFormatOptions } from 'prettier';
+
 import { CodegenTemplateImpl } from '../oa-schema/codegen/codegen-template/codegen-template.impl.js';
 import { OASchemaCodegenImpl } from '../oa-schema/codegen/oa-schema-codegen.impl.js';
 import {
-  OASchemaCodegen,
+  GenerateConfig,
   OASchemaLoaderImpl,
   OASchemaLoaderLoadPayload,
   OASchemaParserImpl,
@@ -22,13 +23,10 @@ export interface EngineEntityClasses {
 
 export interface EngineConfig {
   inputSchemaPayload: OASchemaLoaderLoadPayload;
-  generate: (
-    codegen: OASchemaCodegen,
-    schema: OAInternalSchema,
-    engine: Engine,
-  ) => Promise<void> | void;
+  generate: (generateConfig: GenerateConfig) => Promise<void> | void;
   logLevel?: keyof Logger;
   formatParams?: {
+    usePrettier?: boolean | PrettierFormatOptions;
     schemaNames?: {
       customFn?: (raw: string, content?: any) => string;
       prefix?: string;

@@ -40,6 +40,14 @@ export class FileSystemImpl implements FileSystem {
 
   writeFile(path: string, content: string): void {
     this.logger.debug('writeFile', path);
+
+    const directorySegments = path.split('/').slice(0, -1);
+    const directory = directorySegments.join('/');
+
+    if (!fs.existsSync(directory)) {
+      fs.mkdirSync(directory, { recursive: true });
+    }
+
     fs.writeFileSync(path, content);
     this.logger.debug('writeFile OK');
   }

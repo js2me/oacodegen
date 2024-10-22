@@ -1,3 +1,6 @@
+import { format } from 'prettier';
+import { typeGuard } from 'yammies/type-guard';
+
 import {
   FileSystem,
   FileSystemImpl,
@@ -11,13 +14,14 @@ import {
   CodegenTemplateSaveParams,
 } from './codegen-template.types.js';
 
-export class CodegenTemplateImpl implements CodegenTemplate {
+export class CodegenTemplateImpl extends String implements CodegenTemplate {
   logger: Logger;
   fs: FileSystem;
 
   content: string;
 
   constructor(protected config: CodegenTemplateConfig) {
+    super();
     this.logger = new LoggerImpl({
       engine: config.engine,
       name: 'codegen-template',
@@ -32,7 +36,29 @@ export class CodegenTemplateImpl implements CodegenTemplate {
     this.logger.debug('initialized');
   }
 
+  valueOf() {
+    return this.content;
+  }
+
+  toString(): string {
+    return this.content;
+  }
+
   async save(params: CodegenTemplateSaveParams): Promise<void> {
-    this.fs.writeFile(params.path, this.content);
+    let templateContent = this.content;
+
+    if (this.config.engine.config.formatParams?.usePrettier) {
+      templateContent = await format(
+        templateContent,
+        typeGuard.isBoolean(this.config.engine.config.formatParams?.usePrettier)
+          ? {
+              tabWidth: 2,
+              printWidth: 80,
+            }
+          : this.config.engine.config.formatParams.usePrettier,
+      );
+    }
+
+    this.fs.writeFile(params.path, templateContent);
   }
 }

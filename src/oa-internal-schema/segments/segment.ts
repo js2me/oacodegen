@@ -1,14 +1,14 @@
 import { Engine } from '../../engine/engine.js';
 import { OASchemaWalker } from '../../oa-schema/walker/oa-schema-walker.js';
 
-interface SegmentConfig<Input> {
+export interface SegmentConfig<Input> {
   data: Input;
   walker: OASchemaWalker;
   engine: Engine;
 }
 
 export class Segment<Data> {
-  data: any;
+  data: Data;
 
   constructor(protected config: SegmentConfig<Data>) {
     this.data = config.data;

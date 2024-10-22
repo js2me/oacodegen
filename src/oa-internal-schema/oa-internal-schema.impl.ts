@@ -1,3 +1,5 @@
+import { OpenAPIV3 } from 'openapi-types';
+
 import { OASchemaWalker } from '../oa-schema/walker/index.js';
 import { Logger, LoggerImpl } from '../utils/index.js';
 
@@ -24,6 +26,23 @@ export class OAInternalSchemaImpl implements OAInternalSchema {
     this.logger.debug('initialized');
   }
 
+  async toSegment(
+    type: 'schema',
+    data: {
+      name?: string;
+      schema: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject;
+    },
+  ): Promise<SchemaSegment> {
+    return new SchemaSegment({
+      data: {
+        name: data.name,
+        schema: await this.walker.resolveSchema(data.schema),
+      },
+      walker: this.walker,
+      engine: this.config.engine,
+    });
+  }
+
   async getSchemas() {
     const schemas: SchemaSegment[] = [];
 
@@ -32,22 +51,7 @@ export class OAInternalSchemaImpl implements OAInternalSchema {
     );
 
     for await (const [name, schema] of schemaEntries) {
-      let result = schema;
-
-      while ('$ref' in result) {
-        result = await this.walker.getByRef(result.$ref);
-      }
-
-      schemas.push(
-        new SchemaSegment({
-          data: {
-            name,
-            schema: result,
-          },
-          walker: this.walker,
-          engine: this.config.engine,
-        }),
-      );
+      schemas.push(await this.toSegment('schema', { name, schema }));
     }
 
     return schemas;

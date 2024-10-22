@@ -72,7 +72,11 @@ export class EngineImpl implements Engine {
 
     const codegen = new this.entityClasses.codegen({ engine: this });
 
-    await this.config.generate(codegen, internalSchema, this);
+    await this.config.generate({
+      codegen,
+      schema: internalSchema,
+      engine: this,
+    });
   }
 
   static async run(config: EngineConfig) {

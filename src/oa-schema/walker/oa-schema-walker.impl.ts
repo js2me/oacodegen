@@ -33,6 +33,18 @@ export class OASchemaWalkerImpl implements OASchemaWalker {
     this.logger.debug('initialized');
   }
 
+  async resolveSchema(
+    input: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject,
+  ): Promise<OpenAPIV3.SchemaObject | null> {
+    let result = input;
+
+    while (result && '$ref' in result) {
+      result = await this.getByRef(result.$ref);
+    }
+
+    return result ?? null;
+  }
+
   getByRef(ref: string): Promise<any> {
     this.logger.debug('get by ref', ref);
 

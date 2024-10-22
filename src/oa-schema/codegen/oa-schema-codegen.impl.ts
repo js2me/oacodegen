@@ -1,3 +1,5 @@
+import { typeGuard } from 'yammies/type-guard';
+
 import { LoggerImpl } from '../../utils/logger/logger.impl.js';
 import { Logger } from '../../utils/logger/logger.js';
 
@@ -16,12 +18,31 @@ export class OASchemaCodegenImpl implements OASchemaCodegen {
     this.logger.debug('initialized');
   }
 
-  template(strings: TemplateStringsArray, ...args: any[]) {
-    const content = strings
-      .map((string_, index) => {
-        return `${string_}${args[index] ?? ''}`;
-      })
-      .join('');
+  async template(templateStrings: TemplateStringsArray, ...args: any[]) {
+    const contentSegments = await Promise.all(
+      templateStrings.map(async (templateString, index) => {
+        let stringInsertion = args[index];
+
+        if (typeGuard.isArray(stringInsertion)) {
+          stringInsertion = (
+            await Promise.all(
+              stringInsertion.map(async (it) => {
+                if (it instanceof Promise) return await it;
+                return it;
+              }),
+            )
+          ).join('');
+        }
+
+        if (stringInsertion instanceof Promise) {
+          stringInsertion = await stringInsertion;
+        }
+
+        return `${templateString}${(stringInsertion ?? '').toString().trim()}`;
+      }),
+    );
+
+    const content = contentSegments.join('').trim();
 
     return new this.config.engine.entityClasses.codegenTemplate({
       engine: this.config.engine,
