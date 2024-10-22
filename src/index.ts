@@ -12,6 +12,9 @@ export const codegenSwaggerSchema = EngineImpl.run;
 EngineImpl.run({
   logLevel: 'debug',
   formatParams: {
+    prettier: {
+      parser: 'typescript',
+    },
     schemaNames: {
       suffix: 'DC',
     },

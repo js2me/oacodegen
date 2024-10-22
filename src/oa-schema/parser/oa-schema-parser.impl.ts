@@ -23,8 +23,6 @@ export class OASchemaParserImpl implements OASchemaParser {
       engine: config.engine,
       name: 'oas-schema-parser',
     });
-
-    this.logger.debug('initialized');
   }
 
   applySchemaModifications({

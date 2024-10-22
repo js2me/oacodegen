@@ -25,8 +25,6 @@ export class OASchemaLoaderImpl implements OASchemaLoader {
     this.fs = new FileSystemImpl({
       engine: config.engine,
     });
-
-    this.logger.debug('initialized');
   }
 
   protected async tryToReadFile(path: string) {

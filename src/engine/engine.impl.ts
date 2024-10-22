@@ -34,8 +34,6 @@ export class EngineImpl implements Engine {
 
     this.researchedSchemas = new Map();
     this.researchedSegments = new Map();
-
-    this.logger.debug('initialized');
   }
 
   async run() {

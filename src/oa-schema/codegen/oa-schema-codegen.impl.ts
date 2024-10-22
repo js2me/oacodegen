@@ -14,8 +14,6 @@ export class OASchemaCodegenImpl implements OASchemaCodegen {
       name: 'oas-schema-codegen',
       engine: config.engine,
     });
-
-    this.logger.debug('initialized');
   }
 
   async template(templateStrings: TemplateStringsArray, ...args: any[]) {

@@ -29,8 +29,6 @@ export class OASchemaWalkerImpl implements OASchemaWalker {
     }
 
     this.config.engine.researchedSchemas.set(this.schemaAddress, this);
-
-    this.logger.debug('initialized');
   }
 
   async resolveSchema(

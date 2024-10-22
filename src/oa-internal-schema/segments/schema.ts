@@ -1,6 +1,8 @@
-import { upperFirst } from 'lodash-es';
+import { upperFirst, words } from 'lodash-es';
 import { OpenAPIV3 } from 'openapi-types';
 import { Maybe } from 'yammies/utils/types';
+
+import { Logger, LoggerImpl } from '../../utils/index.js';
 
 import { Segment, SegmentConfig } from './segment.js';
 
@@ -10,8 +12,12 @@ export interface SchemaSegmentData {
 }
 
 export class SchemaSegment extends Segment<SchemaSegmentData> {
+  protected logger: Logger;
+
   constructor(config: SegmentConfig<SchemaSegmentData>) {
     super(config);
+
+    this.logger = new LoggerImpl({ ...config, name: 'schema-segment' });
 
     if (!this.data.schema?.type && !!this.data.schema?.properties) {
       this.data.schema.type = 'object';
@@ -40,10 +46,11 @@ export class SchemaSegment extends Segment<SchemaSegmentData> {
       );
     }
 
-    const formattedName = upperFirst(this.config.data.name).replaceAll(
-      /\s/g,
-      '',
-    );
+    const formattedName = words(
+      upperFirst(this.config.data.name).replaceAll(/\s/g, ''),
+    ).join('');
+
+    this.logger.debug('formattedName', formattedName);
 
     const { suffix, prefix } = formatParams?.schemaNames ?? {};
 

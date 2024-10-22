@@ -22,8 +22,6 @@ export class OAInternalSchemaImpl implements OAInternalSchema {
       schema: this.config.schema,
       schemaAddress: this.config.schemaAddress,
     });
-
-    this.logger.debug('initialized');
   }
 
   async toSegment(

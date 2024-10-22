@@ -1,5 +1,4 @@
 import { format } from 'prettier';
-import { typeGuard } from 'yammies/type-guard';
 
 import {
   FileSystem,
@@ -32,8 +31,6 @@ export class CodegenTemplateImpl extends String implements CodegenTemplate {
     });
 
     this.content = this.config.content ?? '';
-
-    this.logger.debug('initialized');
   }
 
   valueOf() {
@@ -47,15 +44,10 @@ export class CodegenTemplateImpl extends String implements CodegenTemplate {
   async save(params: CodegenTemplateSaveParams): Promise<void> {
     let templateContent = this.content;
 
-    if (this.config.engine.config.formatParams?.usePrettier) {
+    if (this.config.engine.config.formatParams?.prettier) {
       templateContent = await format(
         templateContent,
-        typeGuard.isBoolean(this.config.engine.config.formatParams?.usePrettier)
-          ? {
-              tabWidth: 2,
-              printWidth: 80,
-            }
-          : this.config.engine.config.formatParams.usePrettier,
+        this.config.engine.config.formatParams?.prettier,
       );
     }
 

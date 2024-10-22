@@ -26,7 +26,7 @@ export interface EngineConfig {
   generate: (generateConfig: GenerateConfig) => Promise<void> | void;
   logLevel?: keyof Logger;
   formatParams?: {
-    usePrettier?: boolean | PrettierFormatOptions;
+    prettier?: PrettierFormatOptions;
     schemaNames?: {
       customFn?: (raw: string, content?: any) => string;
       prefix?: string;

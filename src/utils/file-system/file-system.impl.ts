@@ -14,7 +14,6 @@ export class FileSystemImpl implements FileSystem {
       engine: config.engine,
       name: 'file-system',
     });
-    this.logger.debug('initialized');
   }
 
   isExist(path: string): boolean {
