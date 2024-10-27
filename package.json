@@ -14,7 +14,9 @@
 
     "prepub": "pnpm run build",
     "pub": "cd dist && npm publish",
-    "postpub": "npm run clean"
+    "postpub": "npm run clean",
+
+    "test": "node ./codegen-tests/index.js"
   },
   "keywords": ["swagger", "schema", "codegen"],
   "author": "js2me",

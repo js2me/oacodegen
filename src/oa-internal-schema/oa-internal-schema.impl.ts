@@ -5,7 +5,7 @@ import { Logger, LoggerImpl } from '../utils/index.js';
 
 import { OAInternalSchema } from './oa-internal-schema.js';
 import { OAInternalSchemaConfig } from './oa-internal-schema.types.js';
-import { SchemaSegment } from './segments/schema.js';
+import { SchemaSegment } from './segments/schema/index.js';
 
 export class OAInternalSchemaImpl implements OAInternalSchema {
   protected logger: Logger;
@@ -32,6 +32,7 @@ export class OAInternalSchemaImpl implements OAInternalSchema {
     },
   ): Promise<SchemaSegment> {
     return new SchemaSegment({
+      internalSchema: this,
       data: {
         name: data.name,
         schema: await this.walker.resolveSchema(data.schema),

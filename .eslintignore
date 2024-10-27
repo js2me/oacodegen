@@ -16,4 +16,4 @@ jsconfig.json
 *.json
 .eslintrc.cjs
 post-build.mjs
-codegen-output
+codegen-tests

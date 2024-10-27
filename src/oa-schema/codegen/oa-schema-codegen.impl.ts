@@ -1,10 +1,15 @@
 import { typeGuard } from 'yammies/type-guard';
 
+import { OAInternalSchema } from '../../oa-internal-schema/oa-internal-schema.js';
+import { FileSystemImpl } from '../../utils/index.js';
 import { LoggerImpl } from '../../utils/logger/logger.impl.js';
 import { Logger } from '../../utils/logger/logger.js';
 
 import { OASchemaCodegen } from './oa-schema-codegen.js';
-import { OASchemaCodegenConfig } from './oa-schema-codegen.types.js';
+import {
+  GeneratePresetsEngine,
+  OASchemaCodegenConfig,
+} from './oa-schema-codegen.types.js';
 
 export class OASchemaCodegenImpl implements OASchemaCodegen {
   protected logger: Logger;
@@ -46,5 +51,28 @@ export class OASchemaCodegenImpl implements OASchemaCodegen {
       engine: this.config.engine,
       content,
     });
+  }
+
+  createPresetsEngine(
+    name: string,
+    internalSchema: OAInternalSchema,
+  ): GeneratePresetsEngine {
+    return {
+      fs: new FileSystemImpl({ engine: this.config.engine }),
+      logger: new LoggerImpl({
+        engine: this.config.engine,
+        name,
+      }),
+      exec: (preset, input, ...args) => {
+        return preset(
+          input,
+          this.createPresetsEngine(preset.name, internalSchema),
+          ...args,
+        );
+      },
+      template: (...args) => this.template(...args),
+      schema: internalSchema,
+      engine: this.config.engine,
+    };
   }
 }

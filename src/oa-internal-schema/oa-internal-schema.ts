@@ -3,7 +3,7 @@ import { Maybe } from 'yammies/utils/types';
 
 import { OASchemaWalker } from '../oa-schema/index.js';
 
-import { SchemaSegment } from './segments/schema.js';
+import { SchemaSegment } from './segments/schema/index.js';
 
 export interface OAInternalSchema {
   walker: OASchemaWalker;

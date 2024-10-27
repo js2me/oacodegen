@@ -1,3 +1,5 @@
+import { noop } from 'lodash-es';
+
 import fs from 'node:fs';
 
 import { LoggerImpl } from '../logger/logger.impl.js';
@@ -37,13 +39,33 @@ export class FileSystemImpl implements FileSystem {
     return result;
   }
 
+  deleteDir(path: string) {
+    this.logger.debug('clearDir', path);
+
+    if (this.isExist(path) && this.isDir(path)) {
+      fs.rm(path, { recursive: true }, noop);
+    }
+
+    this.logger.debug('clearDir OK');
+  }
+
+  deleteFile(path: string) {
+    this.logger.debug('deleteFile', path);
+
+    if (this.isExist(path) && this.isFile(path)) {
+      fs.rm(path, { recursive: true }, noop);
+    }
+
+    this.logger.debug('deleteFile OK');
+  }
+
   writeFile(path: string, content: string): void {
     this.logger.debug('writeFile', path);
 
     const directorySegments = path.split('/').slice(0, -1);
     const directory = directorySegments.join('/');
 
-    if (!fs.existsSync(directory)) {
+    if (!this.isExist(directory)) {
       fs.mkdirSync(directory, { recursive: true });
     }
 

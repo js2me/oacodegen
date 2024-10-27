@@ -41,16 +41,20 @@ export class CodegenTemplateImpl extends String implements CodegenTemplate {
     return this.content;
   }
 
-  async save(params: CodegenTemplateSaveParams): Promise<void> {
-    let templateContent = this.content;
-
+  async format() {
     if (this.config.engine.config.formatParams?.prettier) {
-      templateContent = await format(
-        templateContent,
+      this.content = await format(
+        this.content,
         this.config.engine.config.formatParams?.prettier,
       );
     }
 
-    this.fs.writeFile(params.path, templateContent);
+    return this.content;
+  }
+
+  async save(params: CodegenTemplateSaveParams): Promise<void> {
+    await this.format();
+
+    this.fs.writeFile(params.path, this.content);
   }
 }

@@ -1,10 +1,9 @@
 import { compact } from 'lodash-es';
 import { typeGuard } from 'yammies/type-guard';
 
-import { SchemaSegment } from '../../oa-internal-schema/segments/schema.js';
+import { SchemaSegment } from '../../oa-internal-schema/segments/schema/index.js';
+import { PresetFn } from '../../oa-schema/index.js';
 import { stringifyValue } from '../../utils/formatting.js';
-import { LoggerImpl } from '../../utils/index.js';
-import { PresetFn } from '../preset-fn.js';
 
 const formatDescription = (description: string, inline?: boolean) => {
   if (!description) return '';
@@ -22,16 +21,17 @@ const formatDescription = (description: string, inline?: boolean) => {
   return description.replaceAll(/\n$/g, '');
 };
 
+/**
+ * \/**
+ * * @description description
+ * * @title title
+ *  *\/
+ */
 export const dataContractJsdocComments: PresetFn<SchemaSegment> = (
   segment,
-  config,
+  codegen,
 ) => {
-  const logger = new LoggerImpl({
-    engine: config.engine,
-    name: 'data-contract-jsdoc-comments',
-  });
-
-  logger.debug(segment);
+  codegen.logger.debug(segment);
 
   const data = segment.data.schema;
 
@@ -61,10 +61,10 @@ export const dataContractJsdocComments: PresetFn<SchemaSegment> = (
   ].filter(Boolean);
 
   if (jsdocComments.length === 0) {
-    return config.codegen.template``;
+    return codegen.template``;
   }
 
-  return config.codegen.template/* ts */ `
+  return codegen.template/* ts */ `
 /**
 ${jsdocComments.map((comment) => ` * ${(comment as string).trim()}`).join('\n')}
  */

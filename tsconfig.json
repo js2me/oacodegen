@@ -3,7 +3,8 @@
     "lib": ["es2023"],
     "module": "node16",
     "target": "es2022",
-
+    "sourceMap": true,
+    "declaration": true,
     "strict": true,
     "esModuleInterop": true,
     "outDir": "dist",

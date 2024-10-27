@@ -4,4 +4,6 @@ export interface FileSystem {
   isFile(path: string): boolean;
   writeFile(path: string, content: string): void;
   readFile(path: string): string;
+  deleteDir(path: string): void;
+  deleteFile(path: string): void;
 }

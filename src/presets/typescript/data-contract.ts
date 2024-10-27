@@ -1,40 +1,34 @@
 import { entries } from 'lodash-es';
 
-import { SchemaSegment } from '../../oa-internal-schema/segments/schema.js';
-import { LoggerImpl } from '../../utils/index.js';
-import { PresetFn } from '../preset-fn.js';
+import { SchemaSegment } from '../../oa-internal-schema/segments/schema/index.js';
+import { PresetFn } from '../../oa-schema/index.js';
 
 import { dataContractJsdocComments } from './data-contract-jsdoc-comments.js';
-import { interfaceProperty } from './interface-property.js';
+import { objectProperty } from './object-property.js';
 
 export const dataContract: PresetFn<SchemaSegment> = async (
   segment,
-  config,
+  codegen,
 ) => {
-  const logger = new LoggerImpl({
-    engine: config.engine,
-    name: 'data-contract',
-  });
+  codegen.logger.debug(segment);
 
-  logger.debug(segment);
+  const jsdocComments = await codegen.exec(dataContractJsdocComments, segment);
 
-  const jsdocComments = await dataContractJsdocComments(segment, config);
+  const { details } = segment;
 
-  const data = segment.data.schema;
+  if (details.type === 'object') {
+    const properties = await details.getProperties();
 
-  if (data?.type === 'object') {
-    return config.codegen.template/* ts */ ` 
-${jsdocComments}
-export interface ${segment.readableName} {
-  ${entries(data.properties).map(async ([propertName, propertySchema]) => interfaceProperty({ name: propertName, schema: propertySchema, interfaceSegment: segment }, config))}
-};
-  `;
+    return codegen.template/* ts */ `
+      ${jsdocComments}
+      export interface ${segment.readableName} {
+        ${entries(properties).map(async ([name, segment]) => codegen.exec(objectProperty, { name, segment, interfaceSegment: segment }))}
+      };
+    `;
   }
 
-  return config.codegen.template/* ts */ `
-${jsdocComments}
-export interface ${segment.readableName} {
-
-};
-`;
+  return codegen.template/* ts */ `
+    ${jsdocComments}
+    export type ${segment.readableName} = ${details.type};
+  `;
 };
