@@ -1,6 +1,6 @@
 {
   "name": "oacodegen",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "scripts": {
     "clean": "rimraf dist",
@@ -12,7 +12,11 @@
     "pub:major": "PUBLISH=true PUBLISH_VERSION=major pnpm run build",
     "test": "node ./codegen-tests/index.js"
   },
-  "keywords": ["swagger", "schema", "codegen"],
+  "keywords": [
+    "swagger",
+    "schema",
+    "codegen"
+  ],
   "author": "js2me",
   "type": "module",
   "license": "MIT",
