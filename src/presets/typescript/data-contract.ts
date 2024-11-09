@@ -22,7 +22,13 @@ export const dataContract: PresetFn<SchemaSegment> = async (
     return codegen.template/* ts */ `
       ${jsdocComments}
       export interface ${segment.readableName} {
-        ${entries(properties).map(async ([name, segment]) => codegen.exec(objectProperty, { name, segment, interfaceSegment: segment }))}
+        ${entries(properties).map(async ([propertyName, propertySegment]) =>
+          codegen.exec(objectProperty, {
+            name: propertyName,
+            segment: propertySegment,
+            interfaceSegment: segment,
+          }),
+        )}
       };
     `;
   }

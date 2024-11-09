@@ -1,5 +1,3 @@
-import { SchemaDetailsAbstract } from '../schema-details-abstract.js';
+import { SchemaDetails } from '../schema-details.js';
 
-export class BooleanSchemaDetails extends SchemaDetailsAbstract<'boolean'> {
-  type = 'boolean' as const;
-}
+export class BooleanSchemaDetails extends SchemaDetails<'boolean'> {}

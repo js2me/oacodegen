@@ -1,4 +1,2 @@
-import { SchemaDetailsAbstract } from '../schema-details-abstract.js';
-export class StringSchemaDetails extends SchemaDetailsAbstract<'string'> {
-  type = 'string' as const;
-}
+import { SchemaDetails } from '../schema-details.js';
+export class StringSchemaDetails extends SchemaDetails<'string'> {}

@@ -5,19 +5,20 @@ import type { OAInternalSchema } from '../../oa-internal-schema.js';
 
 import type { SchemaSegment } from './schema.js';
 
-export abstract class SchemaDetailsAbstract<T> {
-  abstract type: T;
+export interface SchemaDetailsConfig<T> {
+  type: T;
+  segment: SchemaSegment;
+  walker: OASchemaWalker;
+  internalSchema: OAInternalSchema;
+  engine: Engine;
+}
 
+export class SchemaDetails<T> {
+  type: T;
   logger: Logger;
 
-  constructor(
-    protected config: {
-      segment: SchemaSegment;
-      walker: OASchemaWalker;
-      internalSchema: OAInternalSchema;
-      engine: Engine;
-    },
-  ) {
+  constructor(protected config: SchemaDetailsConfig<T>) {
+    this.type = config.type;
     this.logger = new LoggerImpl({
       engine: this.config.engine,
       name: `schema-details-${this.config.segment.readableName}`,

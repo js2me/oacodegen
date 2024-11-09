@@ -1,9 +1,7 @@
-import { SchemaDetailsAbstract } from '../schema-details-abstract.js';
+import { SchemaDetails } from '../schema-details.js';
 import type { SchemaSegment } from '../schema.js';
 
-export class ObjectSchemaDetails extends SchemaDetailsAbstract<'object'> {
-  type = 'object' as const;
-
+export class ObjectSchemaDetails extends SchemaDetails<'object'> {
   async getProperties() {
     const properties = this.config.segment.data.schema?.properties || {};
 
